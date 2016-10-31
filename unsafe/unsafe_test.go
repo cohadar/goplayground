@@ -87,6 +87,9 @@ func TestAlighAndOffset(t *testing.T) {
 	if unsafe.Alignof(s.c) != 2 {
 		t.Errorf("struct not packed")
 	}	
+	if unsafe.Alignof(s.d) != ptr_size {
+		t.Errorf("struct not packed")
+	}		
 	if unsafe.Offsetof(s.b) != 4 {
 		t.Errorf("no padding by int32")
 	}
@@ -96,4 +99,58 @@ func TestAlighAndOffset(t *testing.T) {
 	if unsafe.Offsetof(s.d) != 16 {
 		t.Errorf("no padding by string")
 	}		
+	str := "hello"
+	if unsafe.Alignof(str) != ptr_size {
+		t.Errorf("string alignment is not internal pointer?")
+	}
+}
+
+type StringStruct struct {
+	data *byte
+	size int
+}
+
+func TestStringPointer(t *testing.T) {
+	h := "Hello"
+	p := (*StringStruct)(unsafe.Pointer(&h))
+	if p.size != len(h) {
+		t.Errorf("size not decoded properly")
+	}
+	if byte('H') != *p.data {
+		t.Errorf("string not decoded properly")
+	}
+	if byte('e') != *(*byte)(unsafe.Pointer((uintptr(unsafe.Pointer(p.data)) + 1))) {
+		t.Errorf("string not decoded properly")
+	}	
+	if byte('l') != *(*byte)(unsafe.Pointer((uintptr(unsafe.Pointer(p.data)) + 2))) {
+		t.Errorf("string not decoded properly")
+	}	
+	if byte('l') != *(*byte)(unsafe.Pointer((uintptr(unsafe.Pointer(p.data)) + 3))) {
+		t.Errorf("string not decoded properly")
+	}	
+	if byte('o') != *(*byte)(unsafe.Pointer((uintptr(unsafe.Pointer(p.data)) + 4))) {
+		t.Errorf("string not decoded properly")
+	}		
+}
+
+type SliceStruct struct {
+	data *byte
+	len, cap int
+}
+
+func TestSlicePointer(t *testing.T) {
+	s := make([]string, 0x55, 0x77)
+	p := (*SliceStruct)(unsafe.Pointer(&s))
+	if p.len != 0x55 {
+		t.Errorf("len not found")
+	}
+	if p.cap != 0x77 {
+		t.Errorf("cap not found")
+	}
+	h := "hello"
+	s[0] = "meh"
+	p.data = (*byte)(unsafe.Pointer(&h))
+	if s[0] != "hello" {
+		t.Errorf("setting failed")
+	}
 }
