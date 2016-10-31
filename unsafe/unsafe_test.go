@@ -67,3 +67,33 @@ func TestSizeof(t *testing.T) {
 		t.Errorf("struct did not use field packing?")
 	}	
 }
+
+func TestAlighAndOffset(t *testing.T) {
+	s := struct {
+		a bool  // 0: 1
+		// pad 3
+		b int32 // 4: 4
+		c int16 // 8: 2
+		// pad 6
+		d string  // 16: 16
+	}{}
+	ptr_size := unsafe.Sizeof(&s)
+	if unsafe.Alignof(s) != ptr_size {
+		t.Errorf("struct not aligned to biggest field (string data pointer)")
+	}
+	if unsafe.Alignof(s.b) != 4 {
+		t.Errorf("struct has no padding")
+	}	
+	if unsafe.Alignof(s.c) != 2 {
+		t.Errorf("struct not packed")
+	}	
+	if unsafe.Offsetof(s.b) != 4 {
+		t.Errorf("no padding by int32")
+	}
+	if unsafe.Offsetof(s.c) != 8 {
+		t.Errorf("no padding by int36")
+	}	
+	if unsafe.Offsetof(s.d) != 16 {
+		t.Errorf("no padding by string")
+	}		
+}
