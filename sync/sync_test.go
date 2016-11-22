@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMutex(t *testing.T) {
+func TestWGAndMutex(t *testing.T) {
 	x := int32(0)
 	wg := sync.WaitGroup{}
 	m := sync.Mutex{}
@@ -22,6 +22,25 @@ func TestMutex(t *testing.T) {
 	}
 	wg.Wait()
 	if x != 1e7 {
+		t.Errorf("%d", x)
+	}
+}
+
+func TestOnce(t *testing.T) {
+	x := 0
+	once := sync.Once{}
+	wg := sync.WaitGroup{}
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			once.Do(func() {
+				x++
+			})
+		}()
+	}
+	wg.Wait()
+	if x != 1 {
 		t.Errorf("%d", x)
 	}
 }
