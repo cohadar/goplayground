@@ -116,7 +116,7 @@ func rawSort(data []int) {
 		maxDepth++
 	}
 	maxDepth *= 2
-	quickSort(data, 0, n, maxDepth)	
+	quickSort(data, 0, n, maxDepth)
 }
 
 func swap(data []int, l, r int) {
