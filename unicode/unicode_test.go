@@ -1,6 +1,7 @@
 package unicode_test
 
 import (
+	"fmt"
 	"testing"
 	"unicode"
 	"unicode/utf8"
@@ -39,4 +40,13 @@ func TestEncoding(t *testing.T) {
 	if s != string(ar) {
 		t.Errorf("%q != %q", s, string(ar))
 	}
+}
+
+func ExampleCherokee() {
+	for i := rune(0); i <= unicode.MaxRune; i++ {
+		if unicode.In(i, unicode.Cherokee) {
+			fmt.Printf("%c", i)
+		}
+	}
+	// Output: ᎠᎡᎢᎣᎤᎥᎦᎧᎨᎩᎪᎫᎬᎭᎮᎯᎰᎱᎲᎳᎴᎵᎶᎷᎸᎹᎺᎻᎼᎽᎾᎿᏀᏁᏂᏃᏄᏅᏆᏇᏈᏉᏊᏋᏌᏍᏎᏏᏐᏑᏒᏓᏔᏕᏖᏗᏘᏙᏚᏛᏜᏝᏞᏟᏠᏡᏢᏣᏤᏥᏦᏧᏨᏩᏪᏫᏬᏭᏮᏯᏰᏱᏲᏳᏴᏵᏸᏹᏺᏻᏼᏽꭰꭱꭲꭳꭴꭵꭶꭷꭸꭹꭺꭻꭼꭽꭾꭿꮀꮁꮂꮃꮄꮅꮆꮇꮈꮉꮊꮋꮌꮍꮎꮏꮐꮑꮒꮓꮔꮕꮖꮗꮘꮙꮚꮛꮜꮝꮞꮟꮠꮡꮢꮣꮤꮥꮦꮧꮨꮩꮪꮫꮬꮭꮮꮯꮰꮱꮲꮳꮴꮵꮶꮷꮸꮹꮺꮻꮼꮽꮾꮿ
 }
