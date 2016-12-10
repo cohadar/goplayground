@@ -195,3 +195,18 @@ func g(i int) {
     fmt.Printf("g%v", i)
     g(i + 1)
 }
+
+func ExamplePanic_2() {
+	fmt.Print("before")
+	unsafe_call()
+	fmt.Print("after")
+	// Output: before-panic-after
+}
+
+func unsafe_call() {
+	defer func() {
+		fmt.Print(recover())
+	}()
+	panic("-panic-")
+	fmt.Print("never")
+}
