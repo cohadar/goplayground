@@ -17,9 +17,9 @@ func MyEncode(s []rune) []uint16 {
 		return []uint16{uint16(r)}
 	}
 	r -= 0x10000
-	lo := uint16((r >> 10) & 0x3FF | 0xD800)
-	hi := uint16(r & 0x3FF | 0xDC00)
-	return []uint16{lo, hi}
+	hi := uint16((r >> 10) & 0x3FF | 0xD800)
+	lo := uint16(r & 0x3FF | 0xDC00)
+	return []uint16{hi, lo}
 }
 
 func TestMyEncode(t *testing.T) {
