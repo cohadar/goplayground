@@ -1,28 +1,41 @@
 package strconv_test
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 )
 
-func TestA2i(t *testing.T) {
-	i64, err := strconv.ParseInt("12345", 10, 16)
-	if err != nil {
-		t.Errorf("12345 does not fit in 16 bits?")
-	}
-	if i64 != 12345 {
-		t.Errorf("12345 not parsed properly")
-	}
-	_, err = strconv.ParseInt("12345", 10, 8)
-	if err == nil {
-		t.Errorf("12345 fits in 16 bits?")
+func TestAtoi(t *testing.T) {
+	for i := int16(1); i != 0; i++ {
+		s := strconv.Itoa(int(i))
+		if j, err := strconv.Atoi(s); err != nil || int(i) != j {
+			t.Error(i)
+			return
+		}
 	}
 }
 
-func TestAppend(t *testing.T) {
-	buff := []byte{}
-	buff = append(buff, "€"...)
-	if len(buff) != 3 {
-		t.Errorf("append string to byte slice does not do utf-8 encoding")
-	}
+func ExampleQuote() {
+	fmt.Println(strconv.Quote("	č€🐸"))
+	fmt.Println(strconv.Quote("\x09" + "\xc4\x8d" + "\xe2\x82\xac" + "\xf0\x9f\x90\xb8"))
+	fmt.Println(strconv.Quote("\u0009" + "\u010D" + "\u20AC" + "🐸"))
+	fmt.Println(strconv.Quote(`	"'`))
+	// Output: 
+	// "\tč€🐸"
+	// "\tč€🐸"
+	// "\tč€🐸"
+	// "\t\"'"
+}
+
+func ExampleQuoteRuneToASCII() {
+	fmt.Println(strconv.QuoteRuneToASCII('A'))
+	fmt.Println(strconv.QuoteRuneToASCII(0x11))
+	fmt.Println(strconv.QuoteRuneToASCII('€'))
+	fmt.Println(strconv.QuoteRuneToASCII('🐸'))
+	// Output:
+	// 'A'
+	// '\x11'
+	// '\u20ac'
+	// '\U0001f438'
 }
