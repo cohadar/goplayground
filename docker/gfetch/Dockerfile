@@ -1,3 +1,3 @@
 FROM scratch
 ADD gfetch /
-CMD ["/gfetch"]
+CMD /gfetch
